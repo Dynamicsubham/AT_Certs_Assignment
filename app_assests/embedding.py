@@ -3,13 +3,18 @@ from docx import Document as DocxDocument
 import pandas as pd
 import os
 from io import BytesIO
-
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-from io import BytesIO
 from typing import Union
+import openai
+
+
+from openai import AzureOpenAI
+
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_KEY"),
+    api_version="2024-02-01",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
+
 
 def extract_text(file_content: Union[bytes, BytesIO], filename: str) -> str:
     if isinstance(file_content, bytes):
@@ -67,4 +72,8 @@ def extract_text_from_excel(file_path: str) -> str:
     return combined_text
 
 def get_embedding(text: str):
-    return model.encode(text).tolist()
+    response = client.embeddings.create(
+        input=[text],
+        model="text-embedding-3-large"  # This is the model deployment name on Azure
+    )
+    return response.data[0].embedding

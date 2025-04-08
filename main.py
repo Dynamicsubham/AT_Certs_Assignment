@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
 from typing import Optional, List
-import openai
+from openai import AzureOpenAI
 import logging
 import os
 from dotenv import load_dotenv
@@ -36,10 +36,11 @@ app.add_middleware(
 )
 
 # OpenAI Configuration
-openai.api_type = "azure"
-openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
-openai.api_version = os.getenv("AZURE_OPENAI_API_VERSION")
-openai.api_key = os.getenv("AZURE_OPENAI_KEY")
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_KEY"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
 
 # Models
 class QuestionRequest(BaseModel):
@@ -133,17 +134,17 @@ async def ask_question(request: QuestionRequest = Body(...)):
         logger.info(f"Using {len(context_docs)} documents for context")
 
         # Step 4: Ask OpenAI using context
-        response = openai.ChatCompletion.create(
-            engine=os.getenv("AZURE_OPENAI_MODEL"),
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {request.question}"}
-            ],
-            temperature=0.7,
-            max_tokens=request.max_tokens
-        )
+        response = client.chat.completions.create(
+        model=os.getenv("AZURE_OPENAI_MODEL"),  # This is your deployment name in Azure
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {request.question}"}
+        ],
+        temperature=0.7,
+        max_tokens=request.max_tokens
+    )
 
-        answer = response.choices[0].message['content'].strip()
+        answer = response.choices[0].message.content.strip()
         logger.info(f"Generated answer with {len(answer.split())} words")
 
         return {
@@ -151,7 +152,7 @@ async def ask_question(request: QuestionRequest = Body(...)):
             "sources": [doc["title"] for doc in context_docs]
         }
 
-    except openai.error.OpenAIError as e:
+    except AzureOpenAI.error.OpenAIError as e:
         logger.error(f"OpenAI Error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -203,3 +204,4 @@ async def get_documents():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.1"}
+
