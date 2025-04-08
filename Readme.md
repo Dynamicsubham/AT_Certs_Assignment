@@ -38,8 +38,8 @@ This project is a **Retrieval-Augmented Generation (RAG)**-powered AI system tha
 
 ### 1. Clone the Repo
 ```bash
-git clone https://github.com/your-username/rag-fastapi-mongo-auth.git
-cd rag-fastapi-mongo-auth
+git clone https://github.com/Dynamicsubham/AT_Certs_Assignment
+cd AT_Certs_Assignment
 ```
 
 ### 2. Install Dependencies
