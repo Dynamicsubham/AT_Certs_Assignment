@@ -32,7 +32,11 @@ app = FastAPI(title="RAG-Based AI API with MongoDB + Auth")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://pdf-reader-ai-4d5a2.web.app","https://console.firebase.google.com/project/pdf-reader-ai-4d5a2/overview", "https://pdf-reader-ai-4d5a2.web.app/app"],
+    allow_origins=[
+        "https://pdf-reader-ai-4d5a2.web.app",
+        "https://console.firebase.google.com/project/pdf-reader-ai-4d5a2/overview",
+        "https://pdf-reader-ai-4d5a2.web.app/app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,7 +53,9 @@ client = AzureOpenAI(
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+# ✅ Fixed: use "token" instead of "login"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Models
 class QuestionRequest(BaseModel):
@@ -106,7 +112,7 @@ async def validation_handler(request, exc):
     logger.error(f"Validation error: {exc}")
     return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
-# Register
+# ✅ Register
 @app.post("/register", status_code=201)
 async def register(user: UserCreate):
     if user_collection.find_one({"username": user.username}):
@@ -114,8 +120,8 @@ async def register(user: UserCreate):
     user_collection.insert_one({"username": user.username, "password": hash_password(user.password)})
     return {"message": "User registered"}
 
-# Login
-@app.post("/login", response_model=Token)
+# ✅ Login as /token for OAuth2PasswordBearer compatibility
+@app.post("/token", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = user_collection.find_one({"username": form_data.username})
     if not user or not verify_password(form_data.password, user["password"]):
