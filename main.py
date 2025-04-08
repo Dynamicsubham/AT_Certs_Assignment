@@ -15,7 +15,6 @@ from fastapi import UploadFile, File
 from app_assests.embedding import get_embedding, extract_text
 from fastapi.middleware.cors import CORSMiddleware
 
-
 # Load environment variables
 load_dotenv()
 
@@ -204,3 +203,7 @@ async def get_documents():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.1"}
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of ecc96bd (API CHANGES FOR FRONTEND Embeddings Requirements)
