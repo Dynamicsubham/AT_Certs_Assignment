@@ -17,5 +17,3 @@ scikit-learn
 python-multipart
 numpy
 xlrd
-io
-typing
