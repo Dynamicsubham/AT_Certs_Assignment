@@ -203,7 +203,3 @@ async def get_documents():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.1"}
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of ecc96bd (API CHANGES FOR FRONTEND Embeddings Requirements)
