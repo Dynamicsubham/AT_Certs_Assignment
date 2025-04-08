@@ -16,3 +16,6 @@ torch>=1.10
 scikit-learn
 python-multipart
 numpy
+xlrd
+io
+typing

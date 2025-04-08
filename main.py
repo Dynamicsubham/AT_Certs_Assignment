@@ -167,12 +167,8 @@ async def upload_document(file: UploadFile = File(...)):
 
     try:
         # Save file temporarily
-        temp_path = f"/tmp/{file.filename}"
-        with open(temp_path, "wb") as f:
-            f.write(await file.read())
-
-        # Extract text & embed
-        text = extract_text(temp_path)
+        content = await file.read()
+        text = extract_text(content, file.filename)
         embedding = get_embedding(text)
 
         doc = {
