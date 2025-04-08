@@ -32,7 +32,7 @@ app = FastAPI(title="RAG-Based AI API with MongoDB + Auth")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://pdf-reader-ai-4d5a2.web.app","https://console.firebase.google.com/project/pdf-reader-ai-4d5a2/overview"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
