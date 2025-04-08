@@ -31,8 +31,7 @@ This project is a **Retrieval-Augmented Generation (RAG)**-powered AI system tha
 
 ## 🏗️ Software Architecture
 
-
-
+![Software Architecture](https://github.com/Dynamicsubham/AT_Certs_Assignment/blob/master/Fast%20API%20Backend.png)
 ---
 
 ## 🚀 Getting Started
