@@ -113,8 +113,7 @@ Use [Postman](https://www.postman.com/) or [Hoppscotch](https://hoppscotch.io/) 
 This backend can be deployed on Render or any Docker-compatible cloud:
 
 ```bash
-docker build -t rag-fastapi .
-docker run -p 8000:8000 rag-fastapi
+docker-compose up --build
 ```
 
 ---
