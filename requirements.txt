@@ -1,0 +1,18 @@
+# requirements.txt
+fastapi
+uvicorn
+python-dotenv
+openai==0.28
+pydantic-settings
+pymongo[srv]
+sentence-transformers==2.2.2
+transformers==4.30.2
+pymupdf
+python-docx
+openpyxl
+pandas
+huggingface_hub==0.14.1
+torch>=1.10
+scikit-learn
+python-multipart
+numpy
