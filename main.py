@@ -13,6 +13,7 @@ import uvicorn
 from mongodb import document_collection
 from fastapi import UploadFile, File
 from app_assests.embedding import get_embedding, extract_text
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -26,6 +27,14 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="RAG-Based AI API with MongoDB")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or ["http://localhost:3000"] to restrict
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # OpenAI Configuration
 openai.api_type = "azure"
 openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
@@ -37,7 +46,7 @@ class QuestionRequest(BaseModel):
     question: str = Field(..., min_length=3, example="What is AI?")
     max_tokens: Optional[int] = Field(100, ge=50, le=500)
     document_titles: Optional[List[str]] = Field(None, example=["RESUME.pdf"])
-    
+
 class DocumentIn(BaseModel):
     title: str = Field(..., example="My Doc")
     content: str = Field(..., example="This is the content of the document.")
