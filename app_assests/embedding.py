@@ -7,7 +7,10 @@ from io import BytesIO
 from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 9d0ee1f (API CHANGES FOR FRONTEND Embeddings Requirements)
 
 from io import BytesIO
 from typing import Union
